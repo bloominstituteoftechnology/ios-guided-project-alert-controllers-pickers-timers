@@ -9,10 +9,67 @@
 import UIKit
 
 
-//class TimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
-//    
-//    
-//}
+protocol StopWatchPickerDelegate: AnyObject {
+    func stopWatchPickerDidSelect(duration: TimeInterval)
+}
+
+class StopWatchPicker: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return timeData.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return timeData[component].count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        let timeValue = timeData[component][row]
+        return String(timeValue)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 60
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        print("row: \(row) component: \(component)")
+        
+        print("Duration: \(duration) sec")
+        delegate?.stopWatchPickerDidSelect(duration: duration)
+    }
+    
+    var duration: TimeInterval {
+        let minuteString = pickerView.selectedRow(inComponent: 0)
+        let secondString = pickerView.selectedRow(inComponent: 2)
+
+        let minutes = Int(minuteString)
+        let seconds = Int(secondString)
+        
+        let totalSeconds = TimeInterval(minutes * 60 + seconds)
+        return totalSeconds
+    }
+    
+    var pickerView: UIPickerView! {
+        didSet {
+            // Set default selections (based on specific time)
+            pickerView.selectRow(1, inComponent: 0, animated: false)
+            pickerView.selectRow(0, inComponent: 2, animated: false)
+        }
+    }
+    
+    var timeData = [
+        ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        ["min"],
+        ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        ["sec"]
+    ]
+    
+    weak var delegate: StopWatchPickerDelegate?
+}
+
+
 
 class CountdownViewController: UIViewController {
     
@@ -24,11 +81,15 @@ class CountdownViewController: UIViewController {
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
         
 //        TimePickerView()
-//        timePicker.delegate = timePicker
-//        timePicker.dataSource = self
+        timePicker.delegate = timePickerSource
+        timePicker.dataSource = timePickerSource
+        
+        timePickerSource.pickerView = timePicker
+        
+        timePickerSource.delegate = self
     }
     
-//    var timePicker
+    var timePickerSource = StopWatchPicker()
     
     func updateViews() {
         timeLabel.text = String(countDown.timeRemaining)
@@ -38,14 +99,29 @@ class CountdownViewController: UIViewController {
         timeLabel.text = dateFormatter.string(from:date)
     }
     
+    func showAlert() {
+        let alert = UIAlertController(title: "Timer Finished!", message: "Your countdown is over.", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true)
+    }
+    
+    // TODO: Cancel alert? reset button?
+    
+    // TODO: Finished animation
+    
     @IBAction func startButtonPressed(_ sender: Any) {
-        let duration = pickerView.countDownDuration
+        let duration = datePicker.countDownDuration
+//        let duration = timePickerSource.duration
         
         countDown.start(duration: duration)
     }
     
     @IBAction func pickerDidChange(_ sender: Any) {
-        print("P")
+        if !countDown.isActive() {
+            countDown.duration = datePicker.countDownDuration //timePickerSource.duration
+            updateViews()
+        }
     }
     
     var countDown = Countdown()
@@ -53,9 +129,7 @@ class CountdownViewController: UIViewController {
     @IBOutlet var timePicker: UIPickerView!
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var startButton: UIButton!
-    @IBOutlet var pickerView: UIDatePicker!
-
-    //    @IBOutlet var alertController: UIAlertController!
+    @IBOutlet var datePicker: UIDatePicker!
     
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -72,20 +146,33 @@ extension CountdownViewController: CountdownDelegate {
         print("DONE!")
         
         // TODO: show allert contorller
+        showAlert()
     }
     
-    func countdownDidUpdate(elapsedTime: TimeInterval) {
+    func countdownDidUpdate(timeRemaining: TimeInterval) {
         updateViews()
     }
 }
 
+extension CountdownViewController: StopWatchPickerDelegate {
+    func stopWatchPickerDidSelect(duration: TimeInterval) {
+        // Update label
+//        let duration = timePickerSource.duration
+        updateViews()
+    }
+}
+
+
+
 protocol CountdownDelegate: AnyObject {
-    func countdownDidUpdate(elapsedTime: TimeInterval)
+    func countdownDidUpdate(timeRemaining: TimeInterval)
     func countdownDidFinish()
 }
 
 class Countdown {
     
+    // TODO: State? started, stopped, reset
+
     init() {
         timer = nil
         startDate = nil
@@ -106,19 +193,9 @@ class Countdown {
         stopDate = Date()
     }
     
-//    func startStop() {
-//        if isActive() {
-//            stop()
-//        } else {
-//            start()
-//        }
-//    }
-    
     func isActive() -> Bool {
         return startDate != nil
     }
-    
-    // TODO: State? started, stopped, reset
     
     func reset() {
         startDate = nil
@@ -131,28 +208,24 @@ class Countdown {
         timer = nil
     }
     
+//    @objc private func updateTimer(timer: Timer) {
+//        delegate?.countdownDidUpdate(timeRemaining: timeRemaining)
+//    }
     @objc private func updateTimer(timer: Timer) {
-        if let startDate = startDate, let stopDate = stopDate {
+        if let stopDate = stopDate {
+            
             let currentTime = Date()
-            let elapsedTime = currentTime.timeIntervalSince(startDate)
-            
-            delegate?.countdownDidUpdate(elapsedTime: elapsedTime)
-            
             if currentTime > stopDate {
                 clearTimer()
                 reset()
                 delegate?.countdownDidFinish()
             } else {
-                delegate?.countdownDidUpdate(elapsedTime: elapsedTime)
+                delegate?.countdownDidUpdate(timeRemaining: timeRemaining)
             }
-            
         }
     }
     
-    
-    private var timer: Timer?
-    private var startDate: Date?
-    private var stopDate: Date?
+    weak var delegate: CountdownDelegate?
 
     var duration: TimeInterval
     
@@ -167,5 +240,7 @@ class Countdown {
         }
     }
     
-    weak var delegate: CountdownDelegate?
+    private var timer: Timer?
+    private var startDate: Date?
+    private var stopDate: Date?
 }

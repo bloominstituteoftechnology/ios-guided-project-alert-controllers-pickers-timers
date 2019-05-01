@@ -42,8 +42,12 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bG6-UT-Wcn">
+                                <rect key="frame" x="0.0" y="115" width="414" height="216"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </pickerView>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" minuteInterval="1" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ArA-O2-Kmk">
-                                <rect key="frame" x="0.0" y="397" width="414" height="216"/>
+                                <rect key="frame" x="0.0" y="396" width="414" height="216"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="578368793.170452">
                                     <!--2019-05-01 01:59:53 +0000-->
@@ -52,10 +56,6 @@
                                     <action selector="pickerDidChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="Fn6-tC-eEf"/>
                                 </connections>
                             </datePicker>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bG6-UT-Wcn">
-                                <rect key="frame" x="0.0" y="115" width="414" height="216"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -64,9 +64,14 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="rkN-7Q-qku" secondAttribute="trailing" constant="16" id="fMk-0O-Tap"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="bG6-UT-Wcn"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
-                        <outlet property="pickerView" destination="ArA-O2-Kmk" id="fOv-6R-Kn5"/>
+                        <outlet property="datePicker" destination="ArA-O2-Kmk" id="fOv-6R-Kn5"/>
                         <outlet property="startButton" destination="Gc0-PJ-M0K" id="peq-Xq-FJY"/>
                         <outlet property="timeLabel" destination="fIl-hu-eoF" id="eMT-UA-KWV"/>
                         <outlet property="timePicker" destination="bG6-UT-Wcn" id="5Oj-rg-g08"/>
