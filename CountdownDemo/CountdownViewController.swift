@@ -8,17 +8,34 @@
 
 import UIKit
 
+
+//class TimePickerView: UIPickerViewDelegate, UIPickerViewDataSource {
+//    
+//    
+//}
+
 class CountdownViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         countDown.delegate = self
+        updateViews()
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        
+//        TimePickerView()
+//        timePicker.delegate = timePicker
+//        timePicker.dataSource = self
     }
+    
+//    var timePicker
     
     func updateViews() {
         timeLabel.text = String(countDown.timeRemaining)
+        
         // TODO: Format
+        let date = Date(timeIntervalSinceReferenceDate: countDown.timeRemaining)
+        timeLabel.text = dateFormatter.string(from:date)
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
@@ -26,17 +43,26 @@ class CountdownViewController: UIViewController {
         
         countDown.start(duration: duration)
     }
+    
     @IBAction func pickerDidChange(_ sender: Any) {
         print("P")
     }
     
     var countDown = Countdown()
     
+    @IBOutlet var timePicker: UIPickerView!
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var startButton: UIButton!
     @IBOutlet var pickerView: UIDatePicker!
 
     //    @IBOutlet var alertController: UIAlertController!
+    
+    var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SS"
+        formatter.timeZone = TimeZone.init(secondsFromGMT: 0)
+        return formatter
+    }()
     
 }
 
@@ -44,6 +70,7 @@ extension CountdownViewController: CountdownDelegate {
     func countdownDidFinish() {
         updateViews()
         print("DONE!")
+        
         // TODO: show allert contorller
     }
     
@@ -70,8 +97,9 @@ class Countdown {
         self.duration = duration
         
         clearTimer()
-        timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(updateTimer(timer:)), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.03, target: self, selector: #selector(updateTimer(timer:)), userInfo: nil, repeats: true)
         startDate = Date()
+        stopDate = Date(timeIntervalSinceNow: duration)
     }
     
     func stop() {
@@ -104,11 +132,20 @@ class Countdown {
     }
     
     @objc private func updateTimer(timer: Timer) {
-        if let startDate = startDate {
+        if let startDate = startDate, let stopDate = stopDate {
             let currentTime = Date()
             let elapsedTime = currentTime.timeIntervalSince(startDate)
             
             delegate?.countdownDidUpdate(elapsedTime: elapsedTime)
+            
+            if currentTime > stopDate {
+                clearTimer()
+                reset()
+                delegate?.countdownDidFinish()
+            } else {
+                delegate?.countdownDidUpdate(elapsedTime: elapsedTime)
+            }
+            
         }
     }
     
