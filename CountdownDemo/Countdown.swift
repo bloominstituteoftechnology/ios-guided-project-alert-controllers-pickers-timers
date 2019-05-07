@@ -14,9 +14,7 @@ protocol CountdownDelegate: AnyObject {
 }
 
 class Countdown {
-    
-    // TODO: State? started, stopped, reset
-    
+        
     init() {
         timer = nil
         startDate = nil
@@ -34,7 +32,7 @@ class Countdown {
     }
     
     func stop() {
-        // TODO: 
+        // TODO:
     }
     
     func isActive() -> Bool {

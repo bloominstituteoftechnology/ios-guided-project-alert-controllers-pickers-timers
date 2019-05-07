@@ -80,6 +80,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="blue-button-trimmed" width="9" height="44"/>
+        <image name="blue-button-trimmed" width="9" height="9"/>
     </resources>
 </document>
