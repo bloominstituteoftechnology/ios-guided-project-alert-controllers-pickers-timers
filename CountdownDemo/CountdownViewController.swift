@@ -13,23 +13,32 @@ protocol StopWatchPickerDelegate: AnyObject {
     func stopWatchPickerDidSelect(duration: TimeInterval)
 }
 
-class StopWatchPicker: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
+//enum StopWatchPickerComponents: Int {
+//    case minutes = 0
+//    case minutesTitle = 1
+//    case seconds = 2
+//    case secondsTitle = 3
+//}
+
+//DateModel
+
+class CountdownPicker: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return timeData.count
+        return countdownPickerData.count
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return timeData[component].count
+        return countdownPickerData[component].count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        let timeValue = timeData[component][row]
+        let timeValue = countdownPickerData[component][row]
         return String(timeValue)
     }
-    
+//    secondsDigit = 0...59
     func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        return 60
+        return 50
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -59,7 +68,7 @@ class StopWatchPicker: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
         }
     }
     
-    var timeData = [
+    var countdownPickerData = [
         ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
         ["min"],
         ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
@@ -81,15 +90,15 @@ class CountdownViewController: UIViewController {
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
         
 //        TimePickerView()
-        timePicker.delegate = timePickerSource
-        timePicker.dataSource = timePickerSource
+        timePicker.delegate = countdownPicker
+        timePicker.dataSource = countdownPicker
         
-        timePickerSource.pickerView = timePicker
+        countdownPicker.pickerView = timePicker
         
-        timePickerSource.delegate = self
+        countdownPicker.delegate = self
     }
     
-    var timePickerSource = StopWatchPicker()
+    var countdownPicker = CountdownPicker()
     
     func updateViews() {
         timeLabel.text = String(countDown.timeRemaining)
