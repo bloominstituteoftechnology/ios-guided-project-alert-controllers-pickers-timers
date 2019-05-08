@@ -17,8 +17,8 @@ class CountdownViewController: UIViewController {
         countdown.delegate = self
         countdown.duration = countdownPicker.duration
         
-        updateViews()
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        updateViews()
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {

@@ -163,10 +163,10 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ANSWER: No, because it doesn't print anything, and we haven't connected delegate.
 
-15. Let's add print statements so we can see when timer is done on the console.
-16. Open "Countdown.swift" and add 2 print statements
-	17. Print the time remaining if the timer is still active
-	18. Print the timer "Finished" when it passes the duration
+1. Let's add print statements so we can see when timer is done on the console.
+2. Open "Countdown.swift" and add 2 print statements:
+	1. Print the time remaining if the timer is still active
+	2. Print the timer "Finished" when it passes the duration
 
 
 		    private func updateTimer(timer: Timer) {
@@ -192,17 +192,122 @@ ANSWER: No, because it doesn't print anything, and we haven't connected delegate
 		    }
 
 
-14. 
+3. Conform to the `CountdownDelegate` protocol to update the UI in the "CountdownViewController.swift" (Show the alert in didFinish)
+
+	1. Set the delegate
+
+		    override func viewDidLoad() {
+		        super.viewDidLoad()
+		
+		        countdown.duration = 5
+		        countdown.delegate = self
+		    }
+
+	2. Conform to the protocol
+
+			extension CountdownViewController: CountdownDelegate {
+			    func countdownDidFinish() {
+			        showAlert()
+			    }
+			    
+			    func countdownDidUpdate(timeRemaining: TimeInterval) {
+	
+			    }
+			}
+
+
+4. Add an `updateViews()` method to update the label with the current time.
+
+	1. Create `updateViews()`
+
+		    private func updateViews() {
+		        timeLabel.text = String(countdown.timeRemaining)
+		    }
+
+	2. Call `updateViews()` from delegate methods:
+
+
+			extension CountdownViewController: CountdownDelegate {
+			    func countdownDidFinish() {
+			        updateViews()
+			        showAlert()
+			    }
+			    
+			    func countdownDidUpdate(timeRemaining: TimeInterval) {
+			        updateViews()
+			    }
+			}
+
+5. The UI needs to be updated, it's not user friendly, and the font resizes in "CountdownViewController.swift"
+
+	1. Make the font a fixed width number font, and updateViews() on start
+
+		    override func viewDidLoad() {
+		        super.viewDidLoad()
+		
+		        countdown.duration = 5
+		        countdown.delegate = self
+		        
+		        // Use a fixed width font, so numbers don't "pop" and update UI to show duration
+		        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+		        updateViews()
+		    }
+
+	2. SHARE CODE via Slack: Format the duration using the helper method and property (Add above the IBOutlets)
+
+
+		    func string(from duration: TimeInterval) -> String {
+		        let date = Date(timeIntervalSinceReferenceDate: duration)
+		        return dateFormatter.string(from: date)
+		    }
+		    
+		    var dateFormatter: DateFormatter = {
+		        let formatter = DateFormatter()
+		        formatter.dateFormat = "HH:mm:ss.SS"
+		        formatter.timeZone = TimeZone.init(secondsFromGMT: 0)
+		        return formatter
+		    }()
+
+	3. Update the `updateViews()` method to use the new formatter code to give text: "00:00:00.00" format
+
+
+			private func updateViews() {
+				timeLabel.text = string(from: countdown.timeRemaining)
+			}
+
+6. QUESTION: Does the countdown start and update the UI?
+	1. If not, what issues are you having? 
+
+7. BREAK: Take a 5 minute break
+
+
+9. ACTIVITY (Optional): The countdown will update ~33 times per second when we make the interval `0.03`
+	10. QUESTION: What happens to the UI if we change "Countdown.swift" to use 1 second for the interval?
+
+
+		    func start() {
+		        // Cancel timer before starting new timer
+		        cancelTimer()
+		        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: updateTimer(timer:))
+		        stopDate = Date(timeIntervalSinceNow: duration)
+		        state = .started
+		    }
+
+8. Make the reset button work:
+
+	    @IBAction func resetButtonPressed(_ sender: Any) {
+	        countdown.reset()
+	    }
 
 
 
-	2. Set a default duration of 5 seconds to test logic
-	3. Integrate logic into start/reset actions
-	4. Conform to the delegate protocol using an extension to get updates
-	5. Display unformatted time remaining
-10. Update the user interface
+	1. Set a default duration of 5 seconds to test logic
+	2. Integrate logic into start/reset actions
+	3. Conform to the delegate protocol using an extension to get updates
+	4. Display unformatted time remaining
+8. Update the user interface
 	1. Share code to format TimeInterval using DateFormatter + helper method
-11. Create a "CountdownPicker.swift" subclass of `UIPickerView` to enable user selection of time.
+9. Create a "CountdownPicker.swift" subclass of `UIPickerView` to enable user selection of time.
 	1. Set class on UIPickerView in "Main.storyboard"
 	2. Conform to delegate protocol in 
-12. Connect the app logic and user interface together and cleanup any logic
+10. Connect the app logic and user interface together and cleanup any logic
