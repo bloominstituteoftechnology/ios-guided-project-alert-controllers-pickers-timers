@@ -20,9 +20,10 @@ class CountdownPicker: UIPickerView {
         dataSource = self
         delegate = self
         
-        // Set default duration to 1 minute 30 secondsz
-        self.selectRow(1, inComponent: 0, animated: false)
-        self.selectRow(30, inComponent: 2, animated: false)
+        // Set default duration to 1 minute 30 seconds
+        selectRow(1, inComponent: 0, animated: false)
+        selectRow(30, inComponent: 2, animated: false)
+        countdownDelegate?.countdownPickerDidSelect(duration: duration)
     }
     
     var duration: TimeInterval {
