@@ -46,7 +46,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 1. Demo the countdown app
 
-2. Design the UI using stack view with spacing (8 spacing)
+2. Design the UI using stack view with spacing (8 spacing and fill)
 
 		[UIPickerView]
 		[UILabel: 00:00:00.00]
@@ -59,6 +59,8 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 	1. Time Label Font: System Regular 70
 	2. Time Label: Auto-shrink: Minimum Font Scale: 0.5 (to resize on smaller devices)
 	3. START / RESET button font: System Medium 25
+
+5. Make the buttons have constraints to be 60 points tall (Height constraint = 60, equal button heights)
 
 4. The "CountdownViewController.swift" subclass of `UIViewController` is connected in the starter project storyboard
 
