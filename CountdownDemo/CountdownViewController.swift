@@ -8,45 +8,63 @@
 
 import UIKit
 
-
-
-
 class CountdownViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        countdownPicker.countdownDelegate = self
+        countdown.delegate = self
+        countdown.duration = countdownPicker.duration
         
-        countDown.delegate = self
         updateViews()
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
         
-        countdownPicker.countdownDelegate = self
     }
     
     func updateViews() {
-        timeLabel.text = String(countDown.timeRemaining)
+        //timeLabel.text = String(countdown.timeRemaining)
         
-        let date = Date(timeIntervalSinceReferenceDate: countDown.timeRemaining)
-        timeLabel.text = dateFormatter.string(from:date)
+        switch countdown.state {
+        case .started:
+            timeLabel.text = string(from: countdown.timeRemaining)
+        case .finished:
+            timeLabel.text = string(from: 0)
+        case .reset:
+            timeLabel.text = string(from: countdown.duration)
+        }
     }
     
-    func showAlert() {
+    @IBAction func startButtonPressed(_ sender: Any) {
+//        countdown.start()
+//        updateViews()
+        showAlertAfter(duration: 5)
+    }
+    
+    @IBAction func resetButtonPressed(_ sender: Any) {
+        countdown.reset()
+        updateViews()
+    }
+    
+    private func showAlertAfter(duration: TimeInterval) {
+        let timer = Timer.scheduledTimer(timeInterval: duration, target: self, selector: #selector(timerFinished(timer:)), userInfo: nil, repeats: false)
+    }
+    
+    @objc private func timerFinished(timer: Timer) {
+        showAlert()
+    }
+    
+    private func showAlert() {
         let alert = UIAlertController(title: "Timer Finished!", message: "Your countdown is over.", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true)
     }
     
-    @IBAction func startButtonPressed(_ sender: Any) {
-        let duration = countdownPicker.duration
-        countDown.start(duration: duration)
+    func string(from duration: TimeInterval) -> String {
+        let date = Date(timeIntervalSinceReferenceDate: duration)
+        return dateFormatter.string(from: date)
     }
-    
-    @IBAction func resetButtonPressed(_ sender: Any) {
-        countDown.reset()
-    }
-    
-    var countDown = Countdown()
     
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -55,10 +73,10 @@ class CountdownViewController: UIViewController {
         return formatter
     }()
     
-    @IBOutlet var timePicker: UIPickerView!
+    private var countdown = Countdown()
+    
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var startButton: UIButton!
-    
     @IBOutlet var countdownPicker: CountdownPicker!
 }
 
@@ -75,6 +93,8 @@ extension CountdownViewController: CountdownDelegate {
 
 extension CountdownViewController: CountdownPickerDelegate {
     func countdownPickerDidSelect(duration: TimeInterval) {
+        // Update countdown to use new picker duration value
+        countdown.duration = duration
         updateViews()
     }
 }

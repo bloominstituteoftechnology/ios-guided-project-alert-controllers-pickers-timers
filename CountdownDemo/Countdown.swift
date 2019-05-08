@@ -13,78 +13,73 @@ protocol CountdownDelegate: AnyObject {
     func countdownDidFinish()
 }
 
+enum CountdownState {
+    case started
+    case finished
+    case reset
+}
+
 class Countdown {
         
     init() {
         timer = nil
-        startDate = nil
         stopDate = nil
         duration = 0
+        state = .reset
     }
     
-    func start(duration: TimeInterval) {
-        self.duration = duration
-        
-        clearTimer()
+    func start() {
+        // Cancel timer before starting new timer
+        cancelTimer()
         timer = Timer.scheduledTimer(timeInterval: 0.03, target: self, selector: #selector(updateTimer(timer:)), userInfo: nil, repeats: true)
-        startDate = Date()
+        
         stopDate = Date(timeIntervalSinceNow: duration)
-    }
-    
-    func stop() {
-        // TODO:
-    }
-    
-    func isActive() -> Bool {
-        return startDate != nil
+        state = .started
     }
     
     func reset() {
-        startDate = nil
         stopDate = nil
-        clearTimer()
-        
-        delegate?.countdownDidUpdate(timeRemaining: duration)
+        cancelTimer()
+        state = .reset
     }
     
-    func clearTimer() {
+    func cancelTimer() {
         timer?.invalidate()
         timer = nil
     }
     
-    //    @objc private func updateTimer(timer: Timer) {
-    //        delegate?.countdownDidUpdate(timeRemaining: timeRemaining)
-    //    }
     @objc private func updateTimer(timer: Timer) {
+
         if let stopDate = stopDate {
-            
             let currentTime = Date()
-            if currentTime > stopDate {
-                clearTimer()
-                reset()
-                delegate?.countdownDidFinish()
-            } else {
+            if currentTime <= stopDate {
+                // Timer is active, keep counting down
                 delegate?.countdownDidUpdate(timeRemaining: timeRemaining)
+                
+            } else {
+                // Timer is finished, reset and stop counting down
+                state = .finished
+                cancelTimer()
+                self.stopDate = nil
+                delegate?.countdownDidFinish()
             }
         }
     }
     
     weak var delegate: CountdownDelegate?
-    
     var duration: TimeInterval
-    
     var timeRemaining: TimeInterval {
-        if let startDate = startDate {
-            let currentTime = Date()
-            let elapsedTime = currentTime.timeIntervalSince(startDate)
-            let timeRemaining = duration - elapsedTime
+        
+        if let stopDate = stopDate {
+            let timeRemaining = stopDate.timeIntervalSinceNow
             return timeRemaining
         } else {
-            return duration
+            return 0
         }
+        
     }
     
     private var timer: Timer?
-    private var startDate: Date?
     private var stopDate: Date?
+    private(set) var state: CountdownState
 }

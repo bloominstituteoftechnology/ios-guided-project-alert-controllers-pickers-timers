@@ -60,9 +60,9 @@
 			children = (
 				BD40A74B2279344E00EB0F35 /* AppDelegate.swift */,
 				BD40A75D2279346B00EB0F35 /* CountdownViewController.swift */,
+				BD02B678228239C6003F3D78 /* CountdownPicker.swift */,
 				BD02B67A22823A53003F3D78 /* Countdown.swift */,
 				BD40A74F2279344E00EB0F35 /* Main.storyboard */,
-				BD02B678228239C6003F3D78 /* CountdownPicker.swift */,
 				BD40A7522279344F00EB0F35 /* Assets.xcassets */,
 				BD40A7542279344F00EB0F35 /* LaunchScreen.storyboard */,
 				BD40A7572279344F00EB0F35 /* Info.plist */,

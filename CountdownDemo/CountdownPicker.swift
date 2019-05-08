@@ -20,13 +20,13 @@ class CountdownPicker: UIPickerView {
         dataSource = self
         delegate = self
         
-        // Set default duration to 1 minute 30 seconds
+        // Set default duration to 1 minute 30 secondsz
         self.selectRow(1, inComponent: 0, animated: false)
         self.selectRow(30, inComponent: 2, animated: false)
     }
     
-    
     var duration: TimeInterval {
+        // Convert from minutes + seconds to total seconds
         let minuteString = self.selectedRow(inComponent: 0)
         let secondString = self.selectedRow(inComponent: 2)
         

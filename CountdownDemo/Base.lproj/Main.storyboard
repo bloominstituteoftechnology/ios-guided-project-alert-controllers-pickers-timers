@@ -71,7 +71,6 @@
                         <outlet property="countdownPicker" destination="bG6-UT-Wcn" id="pnN-wu-mIn"/>
                         <outlet property="startButton" destination="Gc0-PJ-M0K" id="peq-Xq-FJY"/>
                         <outlet property="timeLabel" destination="fIl-hu-eoF" id="eMT-UA-KWV"/>
-                        <outlet property="timePicker" destination="bG6-UT-Wcn" id="5Oj-rg-g08"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
