@@ -20,7 +20,7 @@ enum CountdownState {
 }
 
 class Countdown {
-        
+    
     init() {
         timer = nil
         stopDate = nil
@@ -44,12 +44,14 @@ class Countdown {
     }
     
     func cancelTimer() {
+        // We must invalidate a timer, or it will continue to run even if we
+        // start a new timer
         timer?.invalidate()
         timer = nil
     }
     
     @objc private func updateTimer(timer: Timer) {
-
+        
         if let stopDate = stopDate {
             let currentTime = Date()
             if currentTime <= stopDate {
