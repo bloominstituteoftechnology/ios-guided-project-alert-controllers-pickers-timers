@@ -19,26 +19,16 @@ class CountdownViewController: UIViewController {
         
         updateViews()
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
-        
-    }
-    
-    func updateViews() {
-        //timeLabel.text = String(countdown.timeRemaining)
-        
-        switch countdown.state {
-        case .started:
-            timeLabel.text = string(from: countdown.timeRemaining)
-        case .finished:
-            timeLabel.text = string(from: 0)
-        case .reset:
-            timeLabel.text = string(from: countdown.duration)
-        }
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
-//        countdown.start()
-//        updateViews()
-        showAlertAfter(duration: 5)
+    
+        // 1. Demo how to create a timer and call a method
+        // let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: timerFinished(timer:))
+
+        // 2. After connecting Countdown.swift switch to new logic
+        countdown.start()
+        updateViews()
     }
     
     @IBAction func resetButtonPressed(_ sender: Any) {
@@ -46,11 +36,7 @@ class CountdownViewController: UIViewController {
         updateViews()
     }
     
-    private func showAlertAfter(duration: TimeInterval) {
-        let timer = Timer.scheduledTimer(timeInterval: duration, target: self, selector: #selector(timerFinished(timer:)), userInfo: nil, repeats: false)
-    }
-    
-    @objc private func timerFinished(timer: Timer) {
+    private func timerFinished(timer: Timer) {
         showAlert()
     }
     
@@ -59,6 +45,17 @@ class CountdownViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         self.present(alert, animated: true)
+    }
+    
+    private func updateViews() {
+        switch countdown.state {
+        case .started:
+            timeLabel.text = string(from: countdown.timeRemaining)
+        case .finished:
+            timeLabel.text = string(from: 0)
+        case .reset:
+            timeLabel.text = string(from: countdown.duration)
+        }
     }
     
     func string(from duration: TimeInterval) -> String {
