@@ -8,7 +8,10 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 # Summary
 
+<img src="images/Countdown.png" width="400">
+
 1. Demo the countdown app
+
 2. Design the UI using stack view with spacing (16 to sides, 8 between)
 
 		[UIPicker]
