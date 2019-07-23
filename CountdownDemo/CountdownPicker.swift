@@ -14,18 +14,6 @@ protocol CountdownPickerDelegate: AnyObject {
 
 class CountdownPicker: UIPickerView {
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-        dataSource = self
-        delegate = self
-        
-        // Set default duration to 1 minute 30 seconds
-        selectRow(1, inComponent: 0, animated: false)
-        selectRow(30, inComponent: 2, animated: false)
-        countdownDelegate?.countdownPickerDidSelect(duration: duration)
-    }
-    
     var duration: TimeInterval {
         // Convert from minutes + seconds to total seconds
         let minuteString = self.selectedRow(inComponent: 0)
@@ -49,6 +37,18 @@ class CountdownPicker: UIPickerView {
     }()
     
     weak var countdownDelegate: CountdownPickerDelegate?
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        dataSource = self
+        delegate = self
+        
+        // Set default duration to 1 minute 30 seconds
+        selectRow(1, inComponent: 0, animated: false)
+        selectRow(30, inComponent: 2, animated: false)
+        countdownDelegate?.countdownPickerDidSelect(duration: duration)
+    }
 }
 
 // Review the UIPickerViewDataSource documentation

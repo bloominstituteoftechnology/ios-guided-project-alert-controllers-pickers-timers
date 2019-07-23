@@ -10,6 +10,19 @@ import UIKit
 
 class CountdownViewController: UIViewController {
     
+    @IBOutlet var timeLabel: UILabel!
+    @IBOutlet var startButton: UIButton!
+    @IBOutlet var countdownPicker: CountdownPicker!
+    
+    var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SS"
+        formatter.timeZone = TimeZone.init(secondsFromGMT: 0)
+        return formatter
+    }()
+    
+    private var countdown = Countdown()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,19 +75,6 @@ class CountdownViewController: UIViewController {
         let date = Date(timeIntervalSinceReferenceDate: duration)
         return dateFormatter.string(from: date)
     }
-    
-    var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss.SS"
-        formatter.timeZone = TimeZone.init(secondsFromGMT: 0)
-        return formatter
-    }()
-    
-    private var countdown = Countdown()
-    
-    @IBOutlet var timeLabel: UILabel!
-    @IBOutlet var startButton: UIButton!
-    @IBOutlet var countdownPicker: CountdownPicker!
 }
 
 extension CountdownViewController: CountdownDelegate {
