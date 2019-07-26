@@ -1,525 +1,381 @@
 # Alert Controllers, Pickers, and Timers Guided Project
 
-
 ## Starter Project
 
 Have students fork and clone the [starter guided project](https://github.com/LambdaSchool/ios-guided-project-starter-alert-controllers-pickers-timers).
 
-
-# Summary
-
 <img src="images/Countdown.png" width="400">
 
-1. Demo the countdown app
-
-2. Design the UI using stack view with spacing (8 spacing)
-
-		[UIPicker]
-		[UILabel: 00:00:00.00]
-		[UIButton: START]
-		[UIButton: RESET]
-
-3. Pin Stack View to bottom (40), leading (16), trailing (16) 
-4. Create a "CountdownViewController.swfit" subclass of `UIViewController`
-5. Create actions for "START" and "RESET" buttons
-	1. `startButtonPressed()`
-	2. `resetButtonPressed()`
-6. Create a method `showAlert()` to show a Timer finished UIAlertController alert.
-7. Show the alert when `startButtonPressed()`
-8. Show `Timer` documentation
-9. Create a method to show the alert after 2 seconds using a `Timer` object
-10. Users want visual feedback when a timer is running, use the included "Countdown.swift" to keep track of time remaining.
-	1. Discuss how the class works from a high level
-	2. Set a default duration of 5 seconds to test logic
-	3. Integrate logic into start/reset actions
-	4. Conform to the delegate protocol using an extension to get updates
-	5. Display unformatted time remaining
-11. Update the user interface
-	1. Share code to format TimeInterval using DateFormatter + helper method
-12. Create a "CountdownPicker.swift" subclass of `UIPickerView` to enable user selection of time.
-	1. Set class on UIPickerView in "Main.storyboard"
-	2. Conform to delegate protocol in 
-13. Connect the app logic and user interface together and cleanup any logic
-
-## Lesson Plan
-
+## Demo
 
 1. Demo the countdown app
 
-2. Design the UI using stack view with spacing (8 spacing and fill)
+## Storyboard Tasks
 
-		[UIPickerView]
-		[UILabel: 00:00:00.00]
-		[UIButton: START]
-		[UIButton: RESET]
+1. Design the UI using stack view (see storyboard of finished project for details) 
+2. Wire up outlets for the UI components in `CountdownViewController`
+3. Wire up actions for "START" and "RESET" buttons
 
-3. Pin Stack View to bottom (40), leading (16), trailing (16) 
-4. Adjust the fonts
+## Initial View Controller Tasks
 
-	1. Time Label Font: System Regular 70
-	2. Time Label: Auto-shrink: Minimum Font Scale: 0.5 (to resize on smaller devices)
-	3. START / RESET button font: System Medium 25
+4. Implement `showAlert()` - explain how alert controllers work and the various configuration options; mention the use of closures for action button handlers, but don't go in-depth; closures will be covered in the networking sprint
+    ```swift
+	private func showAlert() {
+        let alert = UIAlertController(title: "Timer Finished!", message: "Your countdown is over.", preferredStyle: .alert)
+	    
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        self.present(alert, animated: true)
+    }
+    ```
+5. Show the alert when `startButtonTapped()`
+	```swift
+	@IBAction func startButtonTapped(_ sender: UIButton) {
+	    showAlert()
+	}
+	```
 
-5. Make the buttons have constraints to be 60 points tall (Height constraint = 60, equal button heights)
+## Run and Test
 
-4. The "CountdownViewController.swift" subclass of `UIViewController` is connected in the starter project storyboard
+6. Run the app and test the layout from the storyboard as well as the alert controller you just added to the start button `IBAction`.
+7. Ask the students to raise their hands in Zoom if their apps work as designed
 
-5. Create outlets for the UI components in "CountdownViewController.swift"
-
-	    @IBOutlet var timeLabel: UILabel!
-	    @IBOutlet var startButton: UIButton!
-	    @IBOutlet var countdownPicker: CountdownPicker!
-
-5. Create actions for "START" and "RESET" buttons
-
-		@IBAction func startButtonPressed(_ sender: Any) {
-		
-		}
-		
-		@IBAction func resetButtonPressed(_ sender: Any) {
-		
-		}
-
-6. Create a method `showAlert()` to show a Timer finished UIAlertController alert in the "CountdownViewController.swift"
-
-
-		private func showAlert() {
-		    let alert = UIAlertController(title: "Timer Finished!", message: "Your countdown is over.", preferredStyle: .alert)
-		    
-		    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-		    self.present(alert, animated: true)
-		}
-
-
-7. Show the alert when `startButtonPressed()`
-
-
-		@IBAction func startButtonPressed(_ sender: Any) {
-		    showAlert()
-		}
-		
-		private func showAlert() {
-		    let alert = UIAlertController(title: "Timer Finished!", message: "Your countdown is over.", preferredStyle: .alert)
-		    
-		    alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-		    self.present(alert, animated: true)
-		}
+## Timer Tasks
 
 8. Show `Timer` documentation and explain how we can call a method after 2 seconds using the `Timer.scheduledTimer(withTimeInterval: repeats: block:)` method
+9. Implement the method `timerFinished(timer:)` to show the alert after 2 seconds using a `Timer` object
+    ```swift
+        @IBAction func startButtonTapped(_ sender: UIButton) {
+            let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: timerFinished(timer:))
+        }
+    
+        private func timerFinished(timer: Timer) {
+            showAlert()
+        }
+    ```
+10. Run the app and test this functionality. Show how the label doesn't update because we haven't coded it to do so. Talk about how users want visual feedback when a timer is running.
+11. Use the included `Countdown` class to keep track of time remaining (business logic).
+	* Discuss how the "Countdown.swift" works from a high level
+	* It manages a timer, and clears the timer when finished
+	* It does date math to figure out how much time is remaining
+	* It can be reset
+12. Remove or comment out the above code in the IBAction that schedules a timer, and the method that runs when the timer fires. We'll be using the `Countdown` class instead to track the timer.
+13. Declare a `Countdown` property in the view controller:
+    ```swift		    
+    private let countdown = Countdown()
+    ```
+14. Set the duration in `viewDidLoad()`
+    ```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-9. Create a method `timerFinished(timer:)` to show the alert after 2 seconds using a `Timer` object
+        countdown.duration = 5
+    }
+    ```
+15. Start the countdown in `startButtonTapped()`
+    ```swift
+    @IBAction func startButtonPressed(_ sender: Any) {
+        countdown.start()
+    }
+    ```
 
-	    @IBAction func startButtonPressed(_ sender: Any) {
-	
-	        let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: timerFinished(timer:))
-	
-	    }
-	    
-	    private func timerFinished(timer: Timer) {
-	        showAlert()
-	    }
+### Conform to the `CountdownDelegate`
 
+16. Set the delegate
+    ```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-9. Discuss: Users want visual feedback when a timer is running, use the included "Countdown.swift" to keep track of time remaining (business logic).
-	1. Discuss how the "Countdown.swift" works from a high level
-	2. It manages a timer, and clears the timer when finished
-	3. It does date math to figure out how much time is remaining
-	4. It can be reset
-
-10. Create a `Countdown` object into the "CountdownViewController.swift" 
-
-		    @IBOutlet var countdownPicker: UIPickerView!
-		    @IBOutlet var timeLabel: UILabel!
-		    @IBOutlet var startButton: UIButton!
-		    
-		    
-		    private let countdown = Countdown()
-		}
-
-
-11. Set the duration in `viewDidLoad()`
-
-	    override func viewDidLoad() {
-	        super.viewDidLoad()
-	
-	        countdown.duration = 5
-	    }
-
-
-12. Start the countdown in `startButtonPressed()` (remove/comment previous logic)
-
-
-	    @IBAction func startButtonPressed(_ sender: Any) {
-	
-	        // let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: timerFinished(timer:))
-	
-	        countdown.start()
-	    }
-
-
-13. CHECKIN: Raise hand if you can build and run the app
-
-14. QUESTION: Does anything happen when you press start?
-
-ANSWER: No, because it doesn't print anything, and we haven't connected delegate.
-
-1. Let's add print statements so we can see when timer is done on the console.
-2. Open "Countdown.swift" and add 2 print statements:
-	1. Print the time remaining if the timer is still active
-	2. Print the timer "Finished" when it passes the duration
-
-
-		    private func updateTimer(timer: Timer) {
-		        
-		        if let stopDate = stopDate {
-		            let currentTime = Date()
-		            if currentTime <= stopDate {
-		                // Timer is active, keep counting down
-		                delegate?.countdownDidUpdate(timeRemaining: timeRemaining)
-		                
-		                print("Time remaining: \(timeRemaining)")
-		                
-		            } else {
-		                // Timer is finished, reset and stop counting down
-		                state = .finished
-		                cancelTimer()
-		                self.stopDate = nil
-		                delegate?.countdownDidFinish()
-		                
-		                print("Finished!")
-		            }
-		        }
-		    }
-
-
-3. Conform to the `CountdownDelegate` protocol to update the UI in the "CountdownViewController.swift" (Show the alert in didFinish)
-
-	1. Set the delegate
-
-		    override func viewDidLoad() {
-		        super.viewDidLoad()
-		
-		        countdown.duration = 5
-		        countdown.delegate = self
-		    }
-
-	2. Conform to the protocol
-
-			extension CountdownViewController: CountdownDelegate {
-			    func countdownDidFinish() {
-			        showAlert()
-			    }
+        countdown.duration = 5
+        countdown.delegate = self
+    }
+    ```
+17. Conform to the protocol (the conformance is already in the starter project with stubbed out methods)
+    ```swift
+    extension CountdownViewController: CountdownDelegate {
+        func countdownDidFinish() {
+            showAlert()
+        }
 			    
-			    func countdownDidUpdate(timeRemaining: TimeInterval) {
-	
-			    }
-			}
+        func countdownDidUpdate(timeRemaining: TimeInterval) {
 
+        }
+    }
+    ```
+18. Implement the `updateViews()` method to update the label with the current time.
+	```swift
+    private func updateViews() {
+        timeLabel.text = String(countdown.timeRemaining)
+    }
+    ```
+19. Call `updateViews()` from delegate methods:
+    ```swift
+    extension CountdownViewController: CountdownDelegate {
+        func countdownDidFinish() {
+            updateViews()
+            showAlert()
+        }
 
-4. Add an `updateViews()` method to update the label with the current time.
+        func countdownDidUpdate(timeRemaining: TimeInterval) {
+            updateViews()
+        }
+    }
+	```
 
-	1. Create `updateViews()`
+## Run and Test
 
-		    private func updateViews() {
-		        timeLabel.text = String(countdown.timeRemaining)
-		    }
+20. The UI needs to be updated; it's not user friendly, and the font resizes in `CountdownViewController`
 
-	2. Call `updateViews()` from delegate methods:
+## UI Fixes
 
+21. Update display label with a monospaced font so it doesn't jump around; call `updateViews()` immediately
+	```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-			extension CountdownViewController: CountdownDelegate {
-			    func countdownDidFinish() {
-			        updateViews()
-			        showAlert()
-			    }
-			    
-			    func countdownDidUpdate(timeRemaining: TimeInterval) {
-			        updateViews()
-			    }
-			}
+        countdown.duration = 5
+        countdown.delegate = self
 
-5. The UI needs to be updated, it's not user friendly, and the font resizes in "CountdownViewController.swift"
+        // Use a fixed width font, so numbers don't "pop" and update UI to show duration
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        updateViews()
+    }
+	```
 
-	1. Make the font a fixed width number font, and updateViews() on start
+22. Create a date formatter to turn time remaining into a properly formatted string (Add in the Properties section)
+	```swift
+    var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SS"
+        formatter.timeZone = TimeZone.init(secondsFromGMT: 0)
+        return formatter
+    }()
+    ```
+23. Use the date formatter in the `string(from:) method
+    ```swift
+    func string(from duration: TimeInterval) -> String {
+        let date = Date(timeIntervalSinceReferenceDate: duration)
+        return dateFormatter.string(from: date)
+    }
+	```
+24. Update the `updateViews()` method to use the new formatter code to give text: `00:00:00.00` format
+    ```swift
+    private func updateViews() {
+        timeLabel.text = string(from: countdown.timeRemaining)
+    }
+    ```
 
-		    override func viewDidLoad() {
-		        super.viewDidLoad()
-		
-		        countdown.duration = 5
-		        countdown.delegate = self
-		        
-		        // Use a fixed width font, so numbers don't "pop" and update UI to show duration
-		        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
-		        updateViews()
-		    }
+## Run and Test
 
-	2. SHARE CODE via Slack: Format the duration using the helper method and property (Add above the IBOutlets)
+25. Run the app and test that the timer runs and displays the countdown with the correct formatting (hard coded to be 5 seconds right now as picker view hasn't been configured yet).
+27. Ask the students to raise their hands in Zoom if their apps work as designed
 
+## OPTIONAL: Timer Updates
 
-		    func string(from duration: TimeInterval) -> String {
-		        let date = Date(timeIntervalSinceReferenceDate: duration)
-		        return dateFormatter.string(from: date)
-		    }
-		    
-		    var dateFormatter: DateFormatter = {
-		        let formatter = DateFormatter()
-		        formatter.dateFormat = "HH:mm:ss.SS"
-		        formatter.timeZone = TimeZone.init(secondsFromGMT: 0)
-		        return formatter
-		    }()
+28. QUESTION: What happens to the UI if we change "Countdown.swift" to use 1 second for the interval?
+    ```swift
+    func start() {
+        ...
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: updateTimer(timer:))
+        ...
+    }
+    ```
+## Resetting the Countdown
 
-	3. Update the `updateViews()` method to use the new formatter code to give text: "00:00:00.00" format
-
-
-			private func updateViews() {
-				timeLabel.text = string(from: countdown.timeRemaining)
-			}
-
-6. QUESTION: Does the countdown start and update the UI?
-	1. If not, what issues are you having? 
-
-7. BREAK: Take a 5 minute break
-
-
-9. ACTIVITY (Optional): The countdown will update ~33 times per second when we make the interval `0.03`
-	10. QUESTION: What happens to the UI if we change "Countdown.swift" to use 1 second for the interval?
-
-
-		    func start() {
-		        // Cancel timer before starting new timer
-		        cancelTimer()
-		        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: updateTimer(timer:))
-		        stopDate = Date(timeIntervalSinceNow: duration)
-		        state = .started
-		    }
-
-8. Make the reset button work:
-
-	    @IBAction func resetButtonPressed(_ sender: Any) {
-	        countdown.reset()
-	    }
-
+29. Implement the reset button action
+    ```swift
+    @IBAction func resetButtonPressed(_ sender: Any) {
+        countdown.reset()
+    }
+    ```
 
 ## UIPickerView for Minutes and Seconds selection
 
+30. Set the datasource and delegate for the picker view to the view controller
+    ```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-1. Let's connect the UIPickerView and set it up, first with some test data, and then with duration information for minutes/seconds.
+        countdown.duration = 5
+        countdown.delegate = self
 
-2. Create a new Cocoa Touch file, called "CountdownPicker.swift", subclass `UIPickerView`
+        countdownPicker.dataSource = self
+        countdownPicker.delegate = self
 
-		import UIKit
-		
-		class CountdownPicker: UIPickerView {
-		
-		
-		}
+        // Use a fixed width font, so numbers don't "pop" and update UI to show duration
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        updateViews()
+    }
+	``` 
+31. Implement the datasource methods in the extension of the view controller. Explain what each of these methods do and compare them to their similar methods in a tableview's datasource.
+    ```swift
+    extension CountdownPicker: UIPickerViewDataSource {
+        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return 1
+        }
+ 
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            return 5
+        }
+    }
+    ```
+32. Implement the delegate method `pickerView(_:titleForRow:forComponent:)`. Explain it's function and how it compares to the similar method in a tableview.
+    ```swift
+    extension CountdownPicker: UIPickerViewDelegate {
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            return "Minute"
+        }
+    }
+    ```
 
+## Run and Test
 
-3. Show the documentation for `UIPickerView`
-	4. Show documentation for `UIPickerViewDataSource`
-	5. Show documentation for `UIPickerViewDelegate`
-
-3. Set the `dataSource`, and `delegate` to the protocol in the `init?(coder:)` method
-
-
-	    required init?(coder aDecoder: NSCoder) {
-	        super.init(coder: aDecoder)
-	        
-	        dataSource = self
-	        delegate = self
-	    }
-
-4. Conform to the `UIPickerViewDataSource` protocol in an extension for "CountdownPicker.swift"
-
-		extension CountdownPicker: UIPickerViewDataSource {
-		    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		        return 1
-		    }
-		    
-		    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		        return 5
-		    }
-		    
-		    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		        return "Minute"
-		    }
-		}
-
-
-5. Conform to the `UIPickerViewDelegate` protocol in an extension for "CountdownPicker.swift"
-
-
-		extension CountdownPicker: UIPickerViewDelegate {
-		
-		}
-
-6. Set the class type for the `UIPickerView` in the "Main.storyboard" to `CountdownPicker`
-
-
-5. Build and run the app.
-6. RAISE YOUR HAND if you see "Minute" repeat 5 times in the picker.
+33. Build and run the app.
+34. RAISE YOUR HAND if you see "Minute" repeat 5 times in the picker.
 
 ## Setup UIPickerView Data
 
-We need to provide data in 4 columns:
+35. We need to provide data in 4 columns:
+    * minutes
+    * A minute label
+    * seconds
+    * A second label
 
-1. minutes
-2. A minute label
-3. seconds
-4. A second label
+36. Explain code inside the lazy-loaded property and how it creates the data we need in a 2-dimensional array.
+    ```swift
+    lazy var countdownPickerData: [[String]] = {
+        // Create string arrays using numbers wrapped in string values: ["0", "1", ... "60"]
+        let minutes: [String] = Array(0...60).map { String($0) }
+        let seconds: [String] = Array(0...59).map { String($0) }
+ 
+        // "min" and "sec" are the unit labels
+        let data: [[String]] = [minutes, ["min"], seconds, ["sec"]]
+        return data
+    }()
+    ```
+37. Use the data in the datasource/delegate methods
+    ```swift
+    extension CountdownPicker: UIPickerViewDataSource {
+        func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return countdownPickerData.count
+        }
 
-		[["1" ... "60"] ["min"] [ "1" ... "59" ] [ "sec" ]]
+        func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            return countdownPickerData[component].count
+        }
+    }
 
-1. SHARE CODE VIA Slack: Provide the code to create the data in "CountdownPicker.swift"
-
-	    lazy var countdownPickerData: [[String]] = {
-	        // Create string arrays using numbers wrapped in string values: ["0", "1", ... "60"]
-	        let minutes: [String] = Array(0...60).map { String($0) }
-	        let seconds: [String] = Array(0...59).map { String($0) }
-	        
-	        // "min" and "sec" are the unit labels
-	        let data: [[String]] = [minutes, ["min"], seconds, ["sec"]]
-	        return data
-	    }()
-
-
-2. Use the data in the dataSource delegate methods
-
-		extension CountdownPicker: UIPickerViewDataSource {
-		    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		        return countdownPickerData.count
-		    }
-		
-		    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		        return countdownPickerData[component].count
-		    }
-		
-		    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		        let timeValue = countdownPickerData[component][row]
-		        return String(timeValue)
-		    }
-		}
-
+    extension CountdownPicker: UIPickerViewDelegate {
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            let timeValue = countdownPickerData[component][row]
+            return String(timeValue)
+        }
+    }
+    ```
 
 ## Customize the UIPickerView and Respond to Input
 
-Make the width 50, and implement method to know what row was selected.
+38. Make the width 50, and implement method to know what row was selected.
+    ```swift
+    extension CountdownPicker: UIPickerViewDelegate {
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            let timeValue = countdownPickerData[component][row]
+            return String(timeValue)
+        }
 
-	extension CountdownPicker: UIPickerViewDelegate {
-	    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-	        return 50
-	    }
-	
-	    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+            return 50
+        }
 
-		// notify UI	         
-		 }
-	}
+        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            // Update UI
+        }
+    }
+    ```
+39. Create a computed property to calculate the duration of the picker (place in Properties section)
+    ```swift
+    private var duration: TimeInterval {
+        // Convert from minutes + seconds to total seconds
+        let minuteString = countdownPicker.selectedRow(inComponent: 0)
+        let secondString = countdownPicker.selectedRow(inComponent: 2)
+        
+        let minutes = Int(minuteString)
+        let seconds = Int(secondString)
+        
+        let totalSeconds = TimeInterval(minutes * 60 + seconds)
+        return totalSeconds
+    }
+    ```
+40. Implement logic in the `pickerView(_:didSelectRow:inComponent:)` method to update the UI with the current duration
+    ```swift
+    extension CountdownPicker: UIPickerViewDelegate {
+        func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+            let timeValue = countdownPickerData[component][row]
+            return String(timeValue)
+        }
 
+        func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+            return 50
+        }
 
-2. Create a Delegate protocol for the "CountdownViewController.swift" to listen to
+        func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            countdown.duration = duration
+            updateViews()
+        }
+    }
+    ```
+41. Update the countdown duration to use the `countdownPicker.duration`
+    ```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-		protocol CountdownPickerDelegate: AnyObject {
-		    func countdownPickerDidSelect(duration: TimeInterval)
-		}
+        countdown.duration = duration
+        countdown.delegate = self
 
+        countdownPicker.dataSource = self
+        countdownPicker.delegate = self
 
-3. Create a delegate property named `countdownDelegate` at the bottom of "CountdownPicker.swift"
+        // Use a fixed width font, so numbers don't "pop" and update UI to show duration
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        updateViews()
+    }
+	``` 
+42. Update the `updateViews()` method to show the current duration based on state.
+    ```swift
+    private func updateViews() {
+        startButton.isEnabled = true
+        
+        switch countdown.state {
+        case .started:
+            timeLabel.text = string(from: countdown.timeRemaining)
+            startButton.isEnabled = false
+        case .finished:
+            timeLabel.text = string(from: 0)
+        case .reset:
+            timeLabel.text = string(from: countdown.duration)
+        }
+    }
+    ```
+43. Set a starting value for the countdownPicker
+    ```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-		    weak var countdownDelegate: CountdownPickerDelegate?
-		}
+        countdown.duration = duration
+        countdown.delegate = self
 
-4. Create a computed property to calculate the duration of the picker (min + seconds = total seconds)
+        // Set default duration to 1 minute 30 seconds
+        countdownPicker.selectRow(1, inComponent: 0, animated: false)
+        countdownPicker.selectRow(30, inComponent: 2, animated: false)
 
-	    var duration: TimeInterval {
-	        // Convert from minutes + seconds to total seconds
-	        let minuteString = self.selectedRow(inComponent: 0)
-	        let secondString = self.selectedRow(inComponent: 2)
-	        
-	        let minutes = Int(minuteString)
-	        let seconds = Int(secondString)
-	        
-	        let totalSeconds = TimeInterval(minutes * 60 + seconds)
-	        return totalSeconds
-	    }
+        countdownPicker.dataSource = self
+        countdownPicker.delegate = self
 
-5. Call the delegate with the `duration` computed property when a row is selected in the `UIPickerViewDelegate` extension
+        // Use a fixed width font, so numbers don't "pop" and update UI to show duration
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        updateViews()
+    }
+	```
 
-	    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-	        countdownDelegate?.countdownPickerDidSelect(duration: duration)
-	    }
+## Run and Test
 
-
-7. Connect the updated `CountdownPicker` outlet
-
-	    @IBOutlet var countdownPicker: CountdownPicker!
-
-7. Make the "CountdownViewController.swift" conform to the `CountdownPickerDelegate` and set the `countdownDelegate` in `viewDidLoad()`
-
-
-		override func viewDidLoad() {
-		    super.viewDidLoad()
-		
-		    countdown.duration = 5
-		    countdown.delegate = self
-		    
-		    countdownPicker.countdownDelegate = self
-
-
-WARNING: Make sure this is the new `countdownDelegate`, not `delegate`
-
-8. Create an extension for the delegate protocol method at the bottom (update duration, and the views) 
-
-
-		extension CountdownViewController: CountdownPickerDelegate {
-		    func countdownPickerDidSelect(duration: TimeInterval) {
-		        // Update countdown to use new picker duration value
-		        countdown.duration = duration
-		        updateViews()
-		    }
-		}
-
-
-9. Update the countdown duration to use the `countdownPicker.duration`
-
-	    override func viewDidLoad() {
-	        super.viewDidLoad()
-	
-	        countdown.duration = countdownPicker.duration
-	        countdown.delegate = self
-
-10. Update the update views to show the current duration based on state.
-
-	    private func updateViews() {
-	        switch countdown.state {
-	        case .started:
-	            timeLabel.text = string(from: countdown.timeRemaining)
-	        case .finished:
-	            timeLabel.text = string(from: 0)
-	        case .reset:
-	            timeLabel.text = string(from: countdown.duration)
-	        }
-	    }
-
-
-11. Set a starting value for the CountdownPicker, call delegate method to update UI (selectRows for the picker)
-
-	    required init?(coder aDecoder: NSCoder) {
-	        super.init(coder: aDecoder)
-	        
-	        dataSource = self
-	        delegate = self
-	        
-	        // Set default duration to 1 minute 30 seconds
-	        self.selectRow(1, inComponent: 0, animated: false)
-	        self.selectRow(30, inComponent: 2, animated: false)
-	        countdownDelegate?.countdownPickerDidSelect(duration: duration)
-	    }
-
-
-12. RAISE Hand: Do you need to see anything?
-13. Review the guided project and what we covered
-	14. Timer
-	15. UIPickerView
-	16. AlertController
-17. Review the afternoon project
+44. Build and run the app. Ensure all functionality works properly. App should be feature complete.

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BD02B679228239C6003F3D78 /* CountdownPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD02B678228239C6003F3D78 /* CountdownPicker.swift */; };
 		BD02B67B22823A53003F3D78 /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD02B67A22823A53003F3D78 /* Countdown.swift */; };
 		BD40A74C2279344E00EB0F35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD40A74B2279344E00EB0F35 /* AppDelegate.swift */; };
 		BD40A7512279344E00EB0F35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD40A74F2279344E00EB0F35 /* Main.storyboard */; };
@@ -17,7 +16,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BD02B678228239C6003F3D78 /* CountdownPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownPicker.swift; sourceTree = "<group>"; };
 		BD02B67A22823A53003F3D78 /* Countdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
 		BD40A7482279344E00EB0F35 /* CountdownDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CountdownDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD40A74B2279344E00EB0F35 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -60,7 +58,6 @@
 			children = (
 				BD40A74B2279344E00EB0F35 /* AppDelegate.swift */,
 				BD40A75D2279346B00EB0F35 /* CountdownViewController.swift */,
-				BD02B678228239C6003F3D78 /* CountdownPicker.swift */,
 				BD02B67A22823A53003F3D78 /* Countdown.swift */,
 				BD40A74F2279344E00EB0F35 /* Main.storyboard */,
 				BD40A7522279344F00EB0F35 /* Assets.xcassets */,
@@ -143,7 +140,6 @@
 			files = (
 				BD40A75E2279346B00EB0F35 /* CountdownViewController.swift in Sources */,
 				BD40A74C2279344E00EB0F35 /* AppDelegate.swift in Sources */,
-				BD02B679228239C6003F3D78 /* CountdownPicker.swift in Sources */,
 				BD02B67B22823A53003F3D78 /* Countdown.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
