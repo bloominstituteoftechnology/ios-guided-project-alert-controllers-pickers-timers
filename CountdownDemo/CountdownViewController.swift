@@ -12,9 +12,10 @@ class CountdownViewController: UIViewController {
     
     // MARK: - Outlets
     
-    @IBOutlet var timeLabel: UILabel!
-    @IBOutlet var startButton: UIButton!
-    @IBOutlet var countdownPicker: UIPickerView!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var startButton: UIButton!
+    @IBOutlet weak var resetButton: UIButton!
+    @IBOutlet weak var countdownPicker: UIPickerView!
     
     // MARK: - Properties
     
@@ -65,6 +66,10 @@ class CountdownViewController: UIViewController {
         countdown.duration = duration
         
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        
+        startButton.layer.cornerRadius = 4.0
+        resetButton.layer.cornerRadius = 4.0
+        
         updateViews()
     }
     

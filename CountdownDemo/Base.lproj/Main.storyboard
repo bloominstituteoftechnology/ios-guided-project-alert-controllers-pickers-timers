@@ -32,11 +32,12 @@
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gc0-PJ-M0K">
                                         <rect key="frame" x="0.0" y="351.5" width="382" height="60"/>
+                                        <color key="backgroundColor" red="0.21762283120000001" green="0.58181664399999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="JaI-n1-Jmx"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="25"/>
-                                        <state key="normal" title="START" backgroundImage="blue-button-trimmed">
+                                        <state key="normal" title="START">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -45,11 +46,12 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9ty-Yv-Uyq">
                                         <rect key="frame" x="0.0" y="419.5" width="382" height="60"/>
+                                        <color key="backgroundColor" red="0.21762283120000001" green="0.58181664399999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="I68-yx-BCI"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="25"/>
-                                        <state key="normal" title="RESET" backgroundImage="blue-button-trimmed">
+                                        <state key="normal" title="RESET">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -69,6 +71,7 @@
                     </view>
                     <connections>
                         <outlet property="countdownPicker" destination="bG6-UT-Wcn" id="pnN-wu-mIn"/>
+                        <outlet property="resetButton" destination="9ty-Yv-Uyq" id="ej3-Ok-mBa"/>
                         <outlet property="startButton" destination="Gc0-PJ-M0K" id="peq-Xq-FJY"/>
                         <outlet property="timeLabel" destination="fIl-hu-eoF" id="eMT-UA-KWV"/>
                     </connections>
@@ -78,7 +81,4 @@
             <point key="canvasLocation" x="115.94202898550725" y="137.94642857142856"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="blue-button-trimmed" width="9" height="9"/>
-    </resources>
 </document>

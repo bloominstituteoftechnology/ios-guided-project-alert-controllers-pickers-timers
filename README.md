@@ -85,8 +85,8 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        countdown.duration = 5
         countdown.delegate = self
+        countdown.duration = 5
     }
     ```
 17. Conform to the protocol (the conformance is already in the starter project with stubbed out methods)
@@ -120,20 +120,36 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         }
     }
 	```
+20. Update the `updateViews()` method to show the current duration based on state.
+    ```swift
+    private func updateViews() {
+        startButton.isEnabled = true
+        
+        switch countdown.state {
+        case .started:
+            timeLabel.text = String(countdown.timeRemaining)
+            startButton.isEnabled = false
+        case .finished:
+            timeLabel.text = String(0)
+        case .reset:
+            timeLabel.text = String(countdown.duration)
+        }
+    }
+    ```
 
 ## Run and Test
 
-20. The UI needs to be updated; it's not user friendly, and the font resizes in `CountdownViewController`
+21. The UI needs to be updated; it's not user friendly, and the font resizes in `CountdownViewController`
 
 ## UI Fixes
 
-21. Update display label with a monospaced font so it doesn't jump around; call `updateViews()` immediately
+22. Update display label with a monospaced font so it doesn't jump around; call `updateViews()` immediately
 	```swift
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        countdown.duration = 5
         countdown.delegate = self
+        countdown.duration = 5
 
         // Use a fixed width font, so numbers don't "pop" and update UI to show duration
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
@@ -141,7 +157,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
     }
 	```
 
-22. Create a date formatter to turn time remaining into a properly formatted string (Add in the Properties section)
+23. Create a date formatter to turn time remaining into a properly formatted string (Add in the Properties section)
 	```swift
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -150,23 +166,33 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         return formatter
     }()
     ```
-23. Use the date formatter in the `string(from:) method
+24. Use the date formatter in the `string(from:) method
     ```swift
     func string(from duration: TimeInterval) -> String {
         let date = Date(timeIntervalSinceReferenceDate: duration)
         return dateFormatter.string(from: date)
     }
 	```
-24. Update the `updateViews()` method to use the new formatter code to give text: `00:00:00.00` format
+25. Update the `updateViews()` method to use the new formatter code to give text: `00:00:00.00` format
     ```swift
     private func updateViews() {
-        timeLabel.text = string(from: countdown.timeRemaining)
+        startButton.isEnabled = true
+        
+        switch countdown.state {
+        case .started:
+            timeLabel.text = string(from: countdown.timeRemaining)
+            startButton.isEnabled = false
+        case .finished:
+            timeLabel.text = string(from: 0)
+        case .reset:
+            timeLabel.text = string(from: countdown.duration)
+        }
     }
     ```
 
 ## Run and Test
 
-25. Run the app and test that the timer runs and displays the countdown with the correct formatting (hard coded to be 5 seconds right now as picker view hasn't been configured yet).
+26. Run the app and test that the timer runs and displays the countdown with the correct formatting (hard coded to be 5 seconds right now as picker view hasn't been configured yet).
 27. Ask the students to raise their hands in Zoom if their apps work as designed
 
 ## OPTIONAL: Timer Updates
@@ -185,6 +211,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
     ```swift
     @IBAction func resetButtonPressed(_ sender: Any) {
         countdown.reset()
+        updateViews()
     }
     ```
 
@@ -195,11 +222,11 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        countdown.duration = 5
-        countdown.delegate = self
-
         countdownPicker.dataSource = self
         countdownPicker.delegate = self
+
+        countdown.delegate = self
+        countdown.duration = 5
 
         // Use a fixed width font, so numbers don't "pop" and update UI to show duration
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
@@ -328,50 +355,58 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        countdown.duration = duration
-        countdown.delegate = self
-
         countdownPicker.dataSource = self
         countdownPicker.delegate = self
+
+        countdown.delegate = self
+        countdown.duration = duration
 
         // Use a fixed width font, so numbers don't "pop" and update UI to show duration
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
         updateViews()
     }
 	``` 
-42. Update the `updateViews()` method to show the current duration based on state.
-    ```swift
-    private func updateViews() {
-        startButton.isEnabled = true
-        
-        switch countdown.state {
-        case .started:
-            timeLabel.text = string(from: countdown.timeRemaining)
-            startButton.isEnabled = false
-        case .finished:
-            timeLabel.text = string(from: 0)
-        case .reset:
-            timeLabel.text = string(from: countdown.duration)
-        }
-    }
-    ```
-43. Set a starting value for the countdownPicker
+42. Set a starting value for the countdownPicker
     ```swift
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        countdown.duration = duration
-        countdown.delegate = self
+        countdownPicker.dataSource = self
+        countdownPicker.delegate = self
 
         // Set default duration to 1 minute 30 seconds
         countdownPicker.selectRow(1, inComponent: 0, animated: false)
         countdownPicker.selectRow(30, inComponent: 2, animated: false)
 
-        countdownPicker.dataSource = self
-        countdownPicker.delegate = self
+        countdown.delegate = self
+        countdown.duration = duration
 
         // Use a fixed width font, so numbers don't "pop" and update UI to show duration
         timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        updateViews()
+    }
+	```
+43. Give the two buttons a corner radius of `4.0`
+    ```swift
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        countdownPicker.dataSource = self
+        countdownPicker.delegate = self
+
+        // Set default duration to 1 minute 30 seconds
+        countdownPicker.selectRow(1, inComponent: 0, animated: false)
+        countdownPicker.selectRow(30, inComponent: 2, animated: false)
+
+        countdown.delegate = self
+        countdown.duration = duration
+
+        // Use a fixed width font, so numbers don't "pop" and update UI to show duration
+        timeLabel.font = UIFont.monospacedDigitSystemFont(ofSize: timeLabel.font.pointSize, weight: .medium)
+        
+        startButton.layer.cornerRadius = 4.0
+        resetButton.layer.cornerRadius = 4.0
+
         updateViews()
     }
 	```
