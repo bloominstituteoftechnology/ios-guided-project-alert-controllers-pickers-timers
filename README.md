@@ -10,15 +10,9 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 1. Demo the countdown app
 
-## Storyboard Tasks
-
-1. Design the UI using stack view (see storyboard of finished project for details) 
-2. Wire up outlets for the UI components in `CountdownViewController`
-3. Wire up actions for "START" and "RESET" buttons
-
 ## Initial View Controller Tasks
 
-4. Implement `showAlert()` - explain how alert controllers work and the various configuration options; mention the use of closures for action button handlers, but don't go in-depth; closures will be covered in the networking sprint
+2. Implement `showAlert()` - explain how alert controllers work and the various configuration options; mention the use of closures for action button handlers, but don't go in-depth; closures will be covered in the networking sprint
     ```swift
 	private func showAlert() {
         let alert = UIAlertController(title: "Timer Finished!", message: "Your countdown is over.", preferredStyle: .alert)
@@ -27,7 +21,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         self.present(alert, animated: true)
     }
     ```
-5. Show the alert when `startButtonTapped()`
+3. Show the alert when `startButtonTapped()`
 	```swift
 	@IBAction func startButtonTapped(_ sender: UIButton) {
 	    showAlert()
@@ -36,13 +30,13 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ## Run and Test
 
-6. Run the app and test the layout from the storyboard as well as the alert controller you just added to the start button `IBAction`.
-7. Ask the students to raise their hands in Zoom if their apps work as designed
+4. Run the app and test the layout from the storyboard as well as the alert controller you just added to the start button `IBAction`.
+5. Ask the students to raise their hands in Zoom if their apps work as designed
 
 ## Timer Tasks
 
-8. Show `Timer` documentation and explain how we can call a method after 2 seconds using the `Timer.scheduledTimer(withTimeInterval: repeats: block:)` method
-9. Implement the method `timerFinished(timer:)` to show the alert after 2 seconds using a `Timer` object
+6. Show `Timer` documentation and explain how we can call a method after 2 seconds using the `Timer.scheduledTimer(withTimeInterval: repeats: block:)` method
+7. Implement the method `timerFinished(timer:)` to show the alert after 2 seconds using a `Timer` object
     ```swift
         @IBAction func startButtonTapped(_ sender: UIButton) {
             let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: timerFinished(timer:))
@@ -52,18 +46,18 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
             showAlert()
         }
     ```
-10. Run the app and test this functionality. Show how the label doesn't update because we haven't coded it to do so. Talk about how users want visual feedback when a timer is running.
-11. Use the included `Countdown` class to keep track of time remaining (business logic).
+8. Run the app and test this functionality. Show how the label doesn't update because we haven't coded it to do so. Talk about how users want visual feedback when a timer is running.
+9. Use the included `Countdown` class to keep track of time remaining (business logic).
 	* Discuss how the "Countdown.swift" works from a high level
 	* It manages a timer, and clears the timer when finished
 	* It does date math to figure out how much time is remaining
 	* It can be reset
-12. Remove or comment out the above code in the IBAction that schedules a timer, and the method that runs when the timer fires. We'll be using the `Countdown` class instead to track the timer.
-13. Declare a `Countdown` property in the view controller:
+10. Remove or comment out the above code in the IBAction that schedules a timer, and the method that runs when the timer fires. We'll be using the `Countdown` class instead to track the timer.
+11. Declare a `Countdown` property in the view controller:
     ```swift		    
     private let countdown = Countdown()
     ```
-14. Set the duration in `viewDidLoad()`
+12. Set the duration in `viewDidLoad()`
     ```swift
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +65,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         countdown.duration = 5
     }
     ```
-15. Start the countdown in `startButtonTapped()`
+13. Start the countdown in `startButtonTapped()`
     ```swift
     @IBAction func startButtonPressed(_ sender: Any) {
         countdown.start()
@@ -80,7 +74,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ### Conform to the `CountdownDelegate`
 
-16. Set the delegate
+14. Set the delegate
     ```swift
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,7 +83,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         countdown.duration = 5
     }
     ```
-17. Conform to the protocol (the conformance is already in the starter project with stubbed out methods)
+15. Conform to the protocol (the conformance is already in the starter project with stubbed out methods)
     ```swift
     extension CountdownViewController: CountdownDelegate {
         func countdownDidFinish() {
@@ -101,13 +95,13 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         }
     }
     ```
-18. Implement the `updateViews()` method to update the label with the current time.
+16. Implement the `updateViews()` method to update the label with the current time.
 	```swift
     private func updateViews() {
         timeLabel.text = String(countdown.timeRemaining)
     }
     ```
-19. Call `updateViews()` from delegate methods:
+17. Call `updateViews()` from delegate methods:
     ```swift
     extension CountdownViewController: CountdownDelegate {
         func countdownDidFinish() {
@@ -120,7 +114,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         }
     }
 	```
-20. Update the `updateViews()` method to show the current duration based on state.
+18. Update the `updateViews()` method to show the current duration based on state.
     ```swift
     private func updateViews() {
         startButton.isEnabled = true
@@ -139,11 +133,11 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ## Run and Test
 
-21. The UI needs to be updated; it's not user friendly, and the font resizes in `CountdownViewController`
+19. The UI needs to be updated; it's not user friendly, and the font resizes in `CountdownViewController`
 
 ## UI Fixes
 
-22. Update display label with a monospaced font so it doesn't jump around; call `updateViews()` immediately
+20. Update display label with a monospaced font so it doesn't jump around; call `updateViews()` immediately
 	```swift
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -157,7 +151,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
     }
 	```
 
-23. Create a date formatter to turn time remaining into a properly formatted string (Add in the Properties section)
+21. Create a date formatter to turn time remaining into a properly formatted string (Add in the Properties section)
 	```swift
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -166,14 +160,14 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         return formatter
     }()
     ```
-24. Use the date formatter in the `string(from:) method
+22. Use the date formatter in the `string(from:) method
     ```swift
     func string(from duration: TimeInterval) -> String {
         let date = Date(timeIntervalSinceReferenceDate: duration)
         return dateFormatter.string(from: date)
     }
 	```
-25. Update the `updateViews()` method to use the new formatter code to give text: `00:00:00.00` format
+23. Update the `updateViews()` method to use the new formatter code to give text: `00:00:00.00` format
     ```swift
     private func updateViews() {
         startButton.isEnabled = true
@@ -192,12 +186,12 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ## Run and Test
 
-26. Run the app and test that the timer runs and displays the countdown with the correct formatting (hard coded to be 5 seconds right now as picker view hasn't been configured yet).
-27. Ask the students to raise their hands in Zoom if their apps work as designed
+24. Run the app and test that the timer runs and displays the countdown with the correct formatting (hard coded to be 5 seconds right now as picker view hasn't been configured yet).
+25. Ask the students to raise their hands in Zoom if their apps work as designed
 
 ## OPTIONAL: Timer Updates
 
-28. QUESTION: What happens to the UI if we change "Countdown.swift" to use 1 second for the interval?
+26. QUESTION: What happens to the UI if we change "Countdown.swift" to use 1 second for the interval?
     ```swift
     func start() {
         ...
@@ -207,7 +201,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
     ```
 ## Resetting the Countdown
 
-29. Implement the reset button action
+27. Implement the reset button action
     ```swift
     @IBAction func resetButtonPressed(_ sender: Any) {
         countdown.reset()
@@ -217,7 +211,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ## UIPickerView for Minutes and Seconds selection
 
-30. Set the datasource and delegate for the picker view to the view controller
+28. Set the datasource and delegate for the picker view to the view controller
     ```swift
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -233,7 +227,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         updateViews()
     }
 	``` 
-31. Implement the datasource methods in the extension of the view controller. Explain what each of these methods do and compare them to their similar methods in a tableview's datasource.
+29. Implement the datasource methods in the extension of the view controller. Explain what each of these methods do and compare them to their similar methods in a tableview's datasource.
     ```swift
     extension CountdownPicker: UIPickerViewDataSource {
         func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -245,7 +239,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         }
     }
     ```
-32. Implement the delegate method `pickerView(_:titleForRow:forComponent:)`. Explain it's function and how it compares to the similar method in a tableview.
+30. Implement the delegate method `pickerView(_:titleForRow:forComponent:)`. Explain it's function and how it compares to the similar method in a tableview.
     ```swift
     extension CountdownPicker: UIPickerViewDelegate {
         func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -256,18 +250,18 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ## Run and Test
 
-33. Build and run the app.
-34. RAISE YOUR HAND if you see "Minute" repeat 5 times in the picker.
+31. Build and run the app.
+32. RAISE YOUR HAND if you see "Minute" repeat 5 times in the picker.
 
 ## Setup UIPickerView Data
 
-35. We need to provide data in 4 columns:
+33. We need to provide data in 4 columns:
     * minutes
     * A minute label
     * seconds
     * A second label
 
-36. Explain code inside the lazy-loaded property and how it creates the data we need in a 2-dimensional array.
+34. Explain code inside the lazy-loaded property and how it creates the data we need in a 2-dimensional array.
     ```swift
     lazy var countdownPickerData: [[String]] = {
         // Create string arrays using numbers wrapped in string values: ["0", "1", ... "60"]
@@ -279,7 +273,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         return data
     }()
     ```
-37. Use the data in the datasource/delegate methods
+35. Use the data in the datasource/delegate methods
     ```swift
     extension CountdownPicker: UIPickerViewDataSource {
         func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -301,7 +295,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ## Customize the UIPickerView and Respond to Input
 
-38. Make the width 50, and implement method to know what row was selected.
+36. Make the width 50, and implement method to know what row was selected.
     ```swift
     extension CountdownPicker: UIPickerViewDelegate {
         func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -318,7 +312,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         }
     }
     ```
-39. Create a computed property to calculate the duration of the picker (place in Properties section)
+37. Create a computed property to calculate the duration of the picker (place in Properties section)
     ```swift
     private var duration: TimeInterval {
         // Convert from minutes + seconds to total seconds
@@ -332,7 +326,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         return totalSeconds
     }
     ```
-40. Implement logic in the `pickerView(_:didSelectRow:inComponent:)` method to update the UI with the current duration
+38. Implement logic in the `pickerView(_:didSelectRow:inComponent:)` method to update the UI with the current duration
     ```swift
     extension CountdownPicker: UIPickerViewDelegate {
         func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -350,7 +344,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         }
     }
     ```
-41. Update the countdown duration to use the `countdownPicker.duration`
+39. Update the countdown duration to use the `countdownPicker.duration`
     ```swift
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -366,7 +360,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         updateViews()
     }
 	``` 
-42. Set a starting value for the countdownPicker
+40. Set a starting value for the countdownPicker
     ```swift
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -386,7 +380,7 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
         updateViews()
     }
 	```
-43. Give the two buttons a corner radius of `4.0`
+41. Give the two buttons a corner radius of `4.0`
     ```swift
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -413,4 +407,4 @@ Have students fork and clone the [starter guided project](https://github.com/Lam
 
 ## Run and Test
 
-44. Build and run the app. Ensure all functionality works properly. App should be feature complete.
+42. Build and run the app. Ensure all functionality works properly. App should be feature complete.
