@@ -2,7 +2,7 @@
 
 ## Starter Project
 
-Have students fork and clone the [starter guided project](https://github.com/LambdaSchool/ios-guided-project-starter-alert-controllers-pickers-timers).
+Have students fork and clone the [starter guided project](https://github.com/BloomInstituteOfTechnology/ios-guided-project-starter-alert-controllers-pickers-timers).
 
 <img src="images/Countdown.png" width="400">
 
